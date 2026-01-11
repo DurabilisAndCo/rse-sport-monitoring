@@ -165,4 +165,29 @@ def generate_recommendations(projects):
         ]
     })
     
+    # RECOMMENDATION 9: Synergies (Portfolio only)
+    if len(projects) >= 2:
+        countries = {}
+        for p in projects:
+            c = p.get('country', 'Inconnu')
+            if c not in countries: countries[c] = []
+            countries[c].append(p.get('name'))
+        
+        shared_countries = {k: v for k, v in countries.items() if len(v) >= 2}
+        
+        if shared_countries:
+            country_names = ", ".join(list(shared_countries.keys())[:3])
+            recommendations.append({
+                "category": "Synergies & Mutualisation",
+                "priority": "Haute",
+                "title": f"Développer les synergies locales ({country_names})",
+                "description": f"Plusieurs projets interviennent dans les mêmes pays ({country_names}). Mutualiser les ressources logistiques et humaines.",
+                "impact": "Réduction des coûts, ancrage territorial renforcé, échange de pratiques",
+                "actions": [
+                    "Organiser des comités de pilotage conjoints par pays",
+                    "Partager les équipements, infrastructures et réseaux",
+                    "Créer une communauté de bénéficiaires inter-projets"
+                ]
+            })
+
     return recommendations

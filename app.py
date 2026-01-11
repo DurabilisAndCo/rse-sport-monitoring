@@ -10,12 +10,15 @@ from io import BytesIO
 try:
     from mock_data import generate_mock_projects
     from recommendations import generate_recommendations
+    from pdf_generator import generate_pdf_report
 except:
     # Fallback if modules don't exist
     def generate_mock_projects(n=5):
         return []
     def generate_recommendations(projects):
         return []
+    def generate_pdf_report(project, all_projects=None, recommendations=None):
+        return None
 
 # Configuration de la page
 st.set_page_config(
@@ -332,7 +335,7 @@ demo_mode = st.sidebar.checkbox(
 if demo_mode != st.session_state.demo_mode:
     st.session_state.demo_mode = demo_mode
     if demo_mode and not st.session_state.projects:
-        st.session_state.projects = generate_mock_projects(6)
+        st.session_state.projects = generate_mock_projects(8)  # Generate 8 demo projects
         st.rerun()
 
 st.sidebar.markdown("---")
@@ -672,219 +675,45 @@ elif page == "📄 Rapport Professionnel":
     if not st.session_state.projects:
         st.warning("Aucun projet enregistré. Activez le Mode Démonstration ou créez un projet.")
     else:
-        st.info("Générez un rapport professionnel prêt à être partagé avec vos parties prenantes.")
+        st.info("Générez un rapport professionnel PDF (style AFD) prêt à être partagé avec vos parties prenantes.")
         
-        # Report Configuration
-        with st.form("report_config"):
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
             st.subheader("Configuration du Rapport")
-            
-            report_title = st.text_input("Titre du rapport", value="Rapport RSE - Projets Sport & Développement Durable")
-            report_company = st.text_input("Nom de l'organisation", value="Durabilis & Co")
-            report_year = st.number_input("Année", min_value=2020, max_value=2030, value=datetime.now().year)
-            
-            include_summary = st.checkbox("Inclure le résumé exécutif", value=True)
-            include_dashboards = st.checkbox("Inclure les visualisations", value=True)
-            include_recommendations = st.checkbox("Inclure les recommandations", value=True)
-            
-            generate_report = st.form_submit_button("📥 Générer le Rapport (HTML)", type="primary")
-        
-        if generate_report:
-            # Generate HTML Report
-            html_content = f"""
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>{report_title}</title>
-                <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-                    
-                    body {{
-                        font-family: 'Inter', sans-serif;
-                        line-height: 1.6;
-                        color: #333;
-                        max-width: 1200px;
-                        margin: 0 auto;
-                        padding: 40px;
-                    }}
-                    
-                    .cover-page {{
-                        text-align: center;
-                        padding: 100px 0;
-                        background: linear-gradient(135deg, #2E3192 0%, #00A9E0 100%);
-                        color: white;
-                        margin: -40px -40px 40px -40px;
-                    }}
-                    
-                    .cover-page h1 {{
-                        font-size: 3rem;
-                        margin: 20px 0;
-                    }}
-                    
-                    .cover-page .year {{
-                        font-size: 2rem;
-                        font-weight: 300;
-                    }}
-                    
-                    h2 {{
-                        color: #2E3192;
-                        border-bottom: 3px solid #00A9E0;
-                        padding-bottom: 10px;
-                    }}
-                    
-                    .metric-grid {{
-                        display: grid;
-                        grid-template-columns: repeat(4, 1fr);
-                        gap: 20px;
-                        margin: 30px 0;
-                    }}
-                    
-                    .metric-card {{
-                        background: white;
-                        padding: 20px;
-                        border-radius: 8px;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                        border-left: 4px solid #00A9E0;
-                    }}
-                    
-                    .metric-value {{
-                        font-size: 2rem;
-                        font-weight: 700;
-                        color: #2E3192;
-                    }}
-                    
-                    .metric-label {{
-                        color: #666;
-                        font-size: 0.9rem;
-                    }}
-                    
-                    .project-list {{
-                        margin: 20px 0;
-                    }}
-                    
-                    .project-item {{
-                        background: #f8f9fa;
-                        padding: 15px;
-                        margin: 10px 0;
-                        border-radius: 6px;
-                        border-left: 4px solid #00A9E0;
-                    }}
-                    
-                    .recommendation {{
-                        background: #fff9e6;
-                        padding: 15px;
-                        margin: 15px 0;
-                        border-radius: 6px;
-                        border-left: 4px solid #FCC30B;
-                    }}
-                    
-                    .footer {{
-                        text-align: center;
-                        margin-top: 60px;
-                        padding-top: 20px;
-                        border-top: 2px solid #eee;
-                        color: #666;
-                    }}
-                </style>
-            </head>
-            <body>
-                <div class="cover-page">
-                    <h1>{report_title}</h1>
-                    <p class="year">{report_year}</p>
-                    <p>{report_company}</p>
-                </div>
-                
-                <h2>📋 Sommaire</h2>
-                <ul>
-                    <li>Résumé Exécutif</li>
-                    <li>Vue d'Ensemble des Projets</li>
-                    <li>Analyse des Indicateurs</li>
-                    <li>Recommandations Stratégiques</li>
-                    <li>Conclusion</li>
-                </ul>
-                
-                {f'''
-                <h2>📊 Résumé Exécutif</h2>
-                <div class="metric-grid">
-                    <div class="metric-card">
-                        <div class="metric-value">{len(st.session_state.projects)}</div>
-                        <div class="metric-label">Projets</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">{sum(p.get('budget', 0) for p in st.session_state.projects):,.0f} €</div>
-                        <div class="metric-label">Budget Total</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">{sum(p.get('beneficiaries', 0) for p in st.session_state.projects):,}</div>
-                        <div class="metric-label">Bénéficiaires</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">{len(set(p.get('country', '') for p in st.session_state.projects))}</div>
-                        <div class="metric-label">Pays</div>
-                    </div>
-                </div>
-                ''' if include_summary else ''}
-                
-                <h2>🗂️ Liste des Projets</h2>
-                <div class="project-list">
-                    {''.join([f'''
-                    <div class="project-item">
-                        <h3>{p.get('name', 'Sans nom')}</h3>
-                        <p><strong>Organisation:</strong> {p.get('organization', 'N/A')}</p>
-                        <p><strong>Pays:</strong> {p.get('country', 'N/A')}</p>
-                        <p><strong>Sports:</strong> {', '.join(p.get('sports', []))}</p>
-                        <p><strong>Bénéficiaires:</strong> {p.get('beneficiaries', 0)}</p>
-                        <p><strong>Budget:</strong> {p.get('budget', 0):,.0f} €</p>
-                    </div>
-                    ''' for p in st.session_state.projects])}
-                </div>
-                
-                {f'''
-                <h2>💡 Recommandations Stratégiques</h2>
-                {''.join([f'''
-                <div class="recommendation">
-                    <h3>{rec.get('title', '')}</h3>
-                    <p><strong>Catégorie:</strong> {rec.get('category', '')}</p>
-                    <p><strong>Priorité:</strong> {rec.get('priority', '')}</p>
-                    <p>{rec.get('description', '')}</p>
-                    <p><strong>Impact:</strong> {rec.get('impact', '')}</p>
-                    <ul>
-                        {''.join([f'<li>{action}</li>' for action in rec.get('actions', [])])}
-                    </ul>
-                </div>
-                ''' for rec in generate_recommendations(st.session_state.projects)])}
-                ''' if include_recommendations else ''}
-                
-                <h2>🎯 Conclusion</h2>
-                <p>
-                    Ce rapport présente une vue d'ensemble des projets RSE dans le secteur sportif menés par {report_company}.
-                    Les données démontrent un engagement fort en faveur du développement durable et de l'inclusion sociale à travers le sport.
-                </p>
-                <p>
-                    Les recommandations formulées visent à renforcer l'impact de ces initiatives et à maximiser leur contribution aux Objectifs de Développement Durable.
-                </p>
-                
-                <div class="footer">
-                    <p>Rapport généré le {datetime.now().strftime('%d/%m/%Y')}</p>
-                    <p>{report_company} - Data & Impact</p>
-                </div>
-            </body>
-            </html>
-            """
-            
-            # Download button
-            st.download_button(
-                label="📥 Télécharger le Rapport HTML",
-                data=html_content,
-                file_name=f"rapport_rse_sport_{datetime.now().strftime('%Y%m%d')}.html",
-                mime="text/html"
+            selected_project_name = st.selectbox(
+                "Sélectionner le projet",
+                [p.get('name', 'Sans nom') for p in st.session_state.projects]
             )
             
-            st.success("✅ Rapport généré avec succès!")
+            # Find selected project data
+            selected_project = next((p for p in st.session_state.projects if p.get('name') == selected_project_name), st.session_state.projects[0])
             
-            # Preview
-            with st.expander("👁️ Prévisualiser le rapport"):
-                st.components.v1.html(html_content, height=800, scrolling=True)
+            generate_pdf = st.button("📥 Générer le Rapport PDF (AFD Style)", type="primary")
+
+        if generate_pdf:
+            with st.spinner("Génération du rapport PDF en cours..."):
+                try:
+                    # Generate recommendations for this specific project
+                    project_recs = generate_recommendations([selected_project])
+                    
+                    # Generate PDF
+                    pdf_buffer = generate_pdf_report(selected_project, st.session_state.projects, project_recs)
+                    
+                    if pdf_buffer:
+                        st.success("✅ Rapport PDF généré avec succès!")
+                        st.download_button(
+                            label="⬇️ Télécharger le PDF",
+                            data=pdf_buffer,
+                            file_name=f"Rapport_RSE_{selected_project.get('name', 'projet').replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf",
+                            mime="application/pdf"
+                        )
+                    else:
+                        st.error("Erreur lors de la génération du PDF. Vérifiez les logs.")
+                        
+                except Exception as e:
+                    st.error(f"Une erreur est survenue: {str(e)}")
+                    st.info("Assurez-vous que les dépendances 'reportlab' sont installées.")
 
 # ============================================================================
 # PAGE 5: MANAGE PROJECTS
@@ -901,26 +730,46 @@ elif page == "🗂️ Gérer les Projets":
         
         for idx, project in enumerate(st.session_state.projects):
             with st.expander(f"📁 {project.get('name', 'Projet sans nom')} - {project.get('organization', 'N/A')}"):
+                # View Mode
                 col1, col2 = st.columns(2)
                 
                 with col1:
                     st.write(f"**Pays:** {project.get('country', 'N/A')}")
                     st.write(f"**Localisation:** {project.get('location', 'N/A')}")
                     st.write(f"**Budget:** {project.get('budget', 0):,} €")
-                    st.write(f"**Bénéficiaires:** {project.get('beneficiaries', 0)}")
                 
                 with col2:
                     st.write(f"**Sport(s):** {', '.join(project.get('sports', []))}")
                     st.write(f"**ODD:** {len(project.get('sdgs', []))}")
-                    st.write(f"**Agenda 2063:** {len(project.get('agenda_2063', []))}")
+                    st.write(f"**Bénéficiaires:** {project.get('beneficiaries', 0)}")
                 
-                if project.get('description'):
-                    st.markdown("**Description:**")
-                    st.write(project['description'])
-                
-                if st.button(f"🗑️ Supprimer", key=f"del_{idx}"):
-                    st.session_state.projects.pop(idx)
-                    st.rerun()
+                # Action Buttons
+                col_act1, col_act2 = st.columns([1, 1])
+                with col_act1:
+                    if st.button("✏️ Éditer", key=f"edit_btn_{idx}"):
+                        st.session_state[f"edit_mode_{idx}"] = not st.session_state.get(f"edit_mode_{idx}", False)
+                with col_act2:
+                    if st.button("🗑️ Supprimer", key=f"del_{idx}"):
+                        st.session_state.projects.pop(idx)
+                        st.rerun()
+
+                # Edit Mode Form
+                if st.session_state.get(f"edit_mode_{idx}", False):
+                    st.markdown("#### Mode Édition")
+                    with st.form(key=f"edit_form_{idx}"):
+                        new_name = st.text_input("Nom du projet", value=project['name'])
+                        new_org = st.text_input("Organisation", value=project['organization'])
+                        new_budget = st.number_input("Budget (€)", value=project.get('budget', 0))
+                        new_benef = st.number_input("Bénéficiaires", value=project.get('beneficiaries', 0))
+                        
+                        if st.form_submit_button("✅ Sauvegarder les modifications"):
+                            st.session_state.projects[idx]['name'] = new_name
+                            st.session_state.projects[idx]['organization'] = new_org
+                            st.session_state.projects[idx]['budget'] = new_budget
+                            st.session_state.projects[idx]['beneficiaries'] = new_benef
+                            st.session_state[f"edit_mode_{idx}"] = False
+                            st.success("Modifications enregistrées !")
+                            st.rerun()
         
         st.markdown("---")
         

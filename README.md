@@ -13,24 +13,22 @@ Plateforme de suivi et d'analyse des projets RSE dans le secteur sportif dévelo
   - Alignement ODD / Agenda 2063
   - Indicateurs & suivi
 - **Sélection Intelligente** : Plus de 150 sports catalogués par catégorie
-- **Mode Démonstration** : Données fictives pour prévisualiser la plateforme
+### 📊 Dashboard Interactif
+- **Vue Globale** : Cartographie des projets et indicateurs clés (KPIs)
+- **Analyse d'Impact** : Graphiques dynamiques et suivi des ODD
 
-### 📊 Tableaux de Bord
-- **Métriques Clés** : Budget total, bénéficiaires, couverture géographique
-- **Visualisations Interactives** : 
-  - Distribution géographique des projets
-  - Répartition des sports pratiqués
-  - Alignement avec les 17 ODD
-  - Analyse d'impact (social, environnemental, économique)
-
-### 💡 Recommandations
-- **Analyse Automatique** : Génération de recommandations stratégiques
-- **Priorisation** : Haute, Moyenne, Basse priorité
-- **Actions Concrètes** : Plans d'action détaillés
+### 💡 Intelligence & Recommandations
+- **Moteur de Recommandations** : Suggestions automatiques pour optimiser l'impact
+- **Alignement ODD** : Analyse de la couverture des objectifs de développement durable
 
 ### 📄 Rapports Professionnels
-- **Export HTML** : Rapports prêts à partager
-- **Design Professionnel** : Branding Durabilis & Co
+- **Export PDF & HTML** : Rapports style AFD (Agence Française de Développement) prêts à partager, incluant graphiques et analyses
+- **Personnalisation** : Rapports adaptés au projet sélectionné
+
+### 🗂️ Gestion de Projets
+- **Administration** : Création, édition et suppression de projets
+- **Export Données** : Export global au format CSV
+- **Mode Démo** : Données fictives réalistes pour tester la plateforme
 - **Contenu Complet** : Résumé exécutif, visualisations, recommandations
 
 ## 🛠️ Installation Locale
