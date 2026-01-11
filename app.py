@@ -11,8 +11,20 @@ try:
     from mock_data import generate_mock_projects
     from recommendations import generate_recommendations
     from pdf_generator import generate_pdf_report
-except:
+except ImportError as e:
+    # Log the error for debugging
+    import streamlit as st
+    st.error(f"Erreur d'importation de modules critiques : {e}")
     # Fallback if modules don't exist
+    def generate_mock_projects(n=5):
+        return []
+    def generate_recommendations(projects):
+        return []
+    def generate_pdf_report(project, all_projects=None, recommendations=None):
+        return None
+except Exception as e:
+    import streamlit as st
+    st.error(f"Erreur inattendue au chargement : {e}")
     def generate_mock_projects(n=5):
         return []
     def generate_recommendations(projects):
