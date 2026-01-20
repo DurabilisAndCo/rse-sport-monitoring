@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Évalue ton projet agricole responsable selon les principes CSA-IRA et prépare-toi à l'investissement">
+    <title>Auto-Audit CSA-IRA | Évalue ton projet agricole</title>
+    
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app" class="app-container">
+        
+        <!-- Screen 0: Welcome -->
+        <section id="screen-0" class="screen active" data-screen="welcome">
+            <div class="screen-content">
+                <div class="welcome-hero">
+                    <div class="icon-welcome">
+                        🌱
+                    </div>
+                    <h1 class="title-main">Évalue ton projet agricole responsable</h1>
+                    <p class="subtitle">Évalue ton projet, progresse pas à pas et prépare l'accès à l'investissement.</p>
+                </div>
+                
+                <div class="welcome-info">
+                    <div class="info-card">
+                        <span class="info-icon">⏱️</span>
+                        <span class="info-text">5-7 minutes</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">📱</span>
+                        <span class="info-text">100% mobile</span>
+                    </div>
+                    <div class="info-card">
+                        <span class="info-icon">✅</span>
+                        <span class="info-text">Simple et guidé</span>
+                    </div>
+                </div>
+
+                <div class="reassurance">
+                    <p>💡 Ce n'est pas un examen. C'est un outil pour t'aider à progresser et préparer ton projet pour l'investissement responsable.</p>
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="app.goToScreen(1)">
+                    Lancer mon diagnostic
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Screen 1: Profile -->
+        <section id="screen-1" class="screen" data-screen="profile">
+            <div class="screen-header">
+                <button class="btn-back" onclick="app.goToScreen(0)">← Retour</button>
+                <div class="progress-indicator">
+                    <span class="progress-text">Étape 1/7</span>
+                </div>
+            </div>
+            
+            <div class="screen-content">
+                <h2 class="screen-title">Parle-nous de ton projet</h2>
+                <p class="screen-subtitle">Ces informations nous aident à personnaliser tes recommandations</p>
+
+                <form id="profile-form" class="form-container">
+                    <div class="form-group">
+                        <label class="form-label">Type d'activité principale</label>
+                        <div class="option-grid">
+                            <label class="option-card">
+                                <input type="radio" name="activity-type" value="elevage" required>
+                                <div class="option-content">
+                                    <span class="option-icon">🐄</span>
+                                    <span class="option-text">Élevage</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="activity-type" value="culture" required>
+                                <div class="option-content">
+                                    <span class="option-icon">🌾</span>
+                                    <span class="option-text">Culture</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="activity-type" value="transformation" required>
+                                <div class="option-content">
+                                    <span class="option-icon">🏭</span>
+                                    <span class="option-text">Transformation</span>
+                                </div>
+                            </label>
+                            <label class="option-card">
+                                <input type="radio" name="activity-type" value="mixte" required>
+                                <div class="option-content">
+                                    <span class="option-icon">🔄</span>
+                                    <span class="option-text">Mixte</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="farm-size">Taille de l'exploitation</label>
+                        <input type="text" id="farm-size" name="farm-size" class="form-input" 
+                               placeholder="Ex: 5 hectares, 20 têtes de bétail..." required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="num-youth">Nombre de jeunes</label>
+                            <input type="number" id="num-youth" name="num-youth" class="form-input" 
+                                   min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="num-women">Nombre de femmes</label>
+                            <input type="number" id="num-women" name="num-women" class="form-input" 
+                                   min="0" value="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="location">Localisation (optionnel)</label>
+                        <input type="text" id="location" name="location" class="form-input" 
+                               placeholder="Ville, région...">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        Continuer
+                        <span class="btn-icon">→</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Screen 2: Assessment -->
+        <section id="screen-2" class="screen" data-screen="assessment">
+            <div class="screen-header">
+                <button class="btn-back" onclick="app.goToScreen(1)">← Retour</button>
+                <div class="progress-indicator">
+                    <span class="progress-text">Principe <span id="current-principle">1</span>/10</span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="assessment-progress"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="screen-content">
+                <h2 class="screen-title">Comment fonctionne ton projet aujourd'hui ?</h2>
+                <p class="screen-subtitle">Réponds honnêtement pour obtenir des recommandations utiles</p>
+
+                <div id="assessment-container">
+                    <!-- Questions will be inserted dynamically -->
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" id="prev-principle" onclick="app.previousPrinciple()" style="display: none;">
+                        ← Précédent
+                    </button>
+                    <button class="btn btn-primary" id="next-principle" onclick="app.nextPrinciple()" disabled>
+                        Suivant →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 3: Results -->
+        <section id="screen-3" class="screen" data-screen="results">
+            <div class="screen-content">
+                <h2 class="screen-title">Où en est ton projet ?</h2>
+                
+                <div class="score-display">
+                    <div class="score-circle">
+                        <svg viewBox="0 0 200 200" class="score-svg">
+                            <circle cx="100" cy="100" r="85" class="score-bg"></circle>
+                            <circle cx="100" cy="100" r="85" class="score-fg" id="score-circle"></circle>
+                        </svg>
+                        <div class="score-text">
+                            <span class="score-value" id="global-score">0</span>
+                            <span class="score-unit">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="score-label" id="profile-badge">
+                        <!-- Profile badge will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="profile-message" id="profile-message">
+                    <!-- Personalized message will be inserted here -->
+                </div>
+
+                <div class="principles-breakdown">
+                    <h3 class="section-title">Scores par principe</h3>
+                    <div id="principles-scores">
+                        <!-- Principle scores will be inserted here -->
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="app.goToScreen(4)">
+                    Voir ma feuille de route
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Screen 4: Roadmap -->
+        <section id="screen-4" class="screen" data-screen="roadmap">
+            <div class="screen-header">
+                <button class="btn-back" onclick="app.goToScreen(3)">← Retour</button>
+            </div>
+            
+            <div class="screen-content">
+                <h2 class="screen-title">Ton parcours IRA</h2>
+                <p class="screen-subtitle">Une roadmap personnalisée pour atteindre tes objectifs</p>
+
+                <div class="roadmap-timeline" id="roadmap-timeline">
+                    <!-- Timeline will be inserted here -->
+                </div>
+
+                <div class="roadmap-objective" id="roadmap-objective">
+                    <!-- Objective will be inserted here -->
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="app.goToScreen(5)">
+                    Voir mon plan d'action
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Screen 5: Action Plan -->
+        <section id="screen-5" class="screen" data-screen="action-plan">
+            <div class="screen-header">
+                <button class="btn-back" onclick="app.goToScreen(4)">← Retour</button>
+            </div>
+            
+            <div class="screen-content">
+                <h2 class="screen-title">Que faire maintenant ?</h2>
+                <p class="screen-subtitle">Actions prioritaires personnalisées pour ton projet</p>
+
+                <div id="action-plan-container">
+                    <!-- Action plan will be inserted here -->
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="app.goToScreen(6)">
+                    Voir des exemples inspirants
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Screen 6: Inspiration -->
+        <section id="screen-6" class="screen" data-screen="inspiration">
+            <div class="screen-header">
+                <button class="btn-back" onclick="app.goToScreen(5)">← Retour</button>
+            </div>
+            
+            <div class="screen-content">
+                <h2 class="screen-title">D'autres l'ont fait</h2>
+                <p class="screen-subtitle">Inspire-toi de ces exemples concrets</p>
+
+                <div id="case-study-container">
+                    <!-- Case study will be inserted here -->
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="app.goToScreen(7)">
+                    Exporter mon diagnostic
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Screen 7: Export -->
+        <section id="screen-7" class="screen" data-screen="export">
+            <div class="screen-header">
+                <button class="btn-back" onclick="app.goToScreen(6)">← Retour</button>
+            </div>
+            
+            <div class="screen-content">
+                <h2 class="screen-title">Partager mon diagnostic</h2>
+                <p class="screen-subtitle">Télécharge et partage ton évaluation IRA</p>
+
+                <div class="export-summary" id="export-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Score global</span>
+                        <span class="summary-value" id="export-score">0%</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Profil</span>
+                        <span class="summary-value" id="export-profile">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Principes à renforcer</span>
+                        <span class="summary-value" id="export-weak-count">0</span>
+                    </div>
+                </div>
+
+                <div class="export-actions">
+                    <button class="btn btn-primary btn-large" onclick="app.exportPDF()">
+                        📄 Télécharger mon diagnostic PDF
+                    </button>
+                    
+                    <button class="btn btn-secondary btn-large" onclick="app.saveProgress()">
+                        💾 Sauvegarder pour plus tard
+                    </button>
+                    
+                    <button class="btn btn-outline btn-large" onclick="app.restartAssessment()">
+                        🔄 Recommencer une évaluation
+                    </button>
+                </div>
+
+                <div class="next-steps">
+                    <h3 class="section-title">Prochaines étapes recommandées</h3>
+                    <ul class="steps-list">
+                        <li>✅ Partage ce diagnostic avec ton incubateur ou financeur</li>
+                        <li>📊 Mets en place les actions prioritaires identifiées</li>
+                        <li>🔄 Réévalue ton projet dans 3 mois pour suivre ta progression</li>
+                        <li>🤝 Rejoins un réseau de jeunes agriculteurs IRA</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="data/questions.js"></script>
+    <script src="data/case-studies.js"></script>
+    <script src="modules/scoring-engine.js"></script>
+    <script src="modules/recommendation-engine.js"></script>
+    <script src="modules/roadmap-generator.js"></script>
+    <script src="modules/export-pdf.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
